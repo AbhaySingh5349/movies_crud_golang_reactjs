@@ -1,10 +1,21 @@
-import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+import { Layout, Movies, Login, MovieInfo, Genres, MovieForm } from './index';
 
 const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline text-blue-400">
-      React_Golang App!
-    </h1>
+    <main>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Movies />} />
+          <Route path="/movies/:movieId" element={<MovieInfo />} />
+          <Route path="/profile/movies/new" element={<MovieForm />} />
+          <Route path="/profile/movies" element={<Movies />} />
+          <Route path="/genres" element={<Genres />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+      </Routes>
+    </main>
   );
 };
 

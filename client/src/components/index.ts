@@ -1,0 +1,9 @@
+export { default as Layout } from './Layout';
+export { default as Header } from './shared/Header';
+export { default as LeftSideBar } from './shared/LeftSideBar';
+export { default as SideBarItem } from './shared/SideBarItem';
+export { default as Movies } from './movie/Movies';
+export { default as Login } from './login/Login';
+export { default as MovieInfo } from './movie/MovieInfo';
+export { default as Genres } from './genres/Genres';
+export { default as MovieForm } from './movie/MovieForm';
