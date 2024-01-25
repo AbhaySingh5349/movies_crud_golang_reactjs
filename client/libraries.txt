@@ -1,0 +1,16 @@
+// setup project
+
+npx create-react-app ./ --template typescript
+delete App.css, App.tsx and move App.test.tsx in src/components
+npm start (to run app)
+
+// add tailwind to project (follow: https://tailwindcss.com/docs/guides/create-react-app)
+
+// setup github repo
+create new repo without README.md
+git init
+git add .
+git commit -m "react tailwind setup"
+git branch -M main
+git remote add origin https://github.com/AbhaySingh5349/movies_crud_golang_reactjs.git
+git push -u origin main
