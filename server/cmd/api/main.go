@@ -22,11 +22,10 @@ func main(){
 
 	log.Println("Starting application on port", port)
 
-	// execute Hello function when we are looking at root/hello level of app i.e http://localhost:8080/hello
-	http.HandleFunc("/hello", Hello)
+	
 
 	// start web-server
-	err := http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(port, app.routes())
 	if err != nil {
 		log.Fatal(err)
 	}

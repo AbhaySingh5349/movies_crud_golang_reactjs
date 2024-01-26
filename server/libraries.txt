@@ -3,3 +3,6 @@ go mod init server
 // create cmd/api folder to keep main module 
 
 // to run all files in folder: go run .\cmd\api\
+
+// for routing
+go get -u github.com/go-chi/chi/v5
