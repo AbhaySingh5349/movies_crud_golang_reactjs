@@ -7,6 +7,7 @@ import (
 	
 	"server/internal/repository"
 	"server/internal/repository/dbrepo"
+	"time"
 )
 
 const (
@@ -18,6 +19,11 @@ type application struct {
 	DataSourceName string
 	Domain string
 	PostgresDB repository.DatabaseRepo
+	auth         AuthStruct
+	JWTSecret    string
+	JWTIssuer    string
+	JWTAudience  string
+	CookieDomain string
 }
 
 func main(){
@@ -26,6 +32,11 @@ func main(){
 
 	// read from command line
 	flag.StringVar(&app.DataSourceName, "dsn", "host=localhost port=5432 user=postgres password=postgres dbname=movies sslmode=disable timezone=UTC connect_timeout=5", "Postgres connection string")
+	flag.StringVar(&app.JWTSecret, "jwt-secret", "secretstring", "signing secret") // var, key, value, help-text
+	flag.StringVar(&app.JWTIssuer, "jwt-issuer", "example.com", "signing issuer")
+	flag.StringVar(&app.JWTAudience, "jwt-audience", "example.com", "signing audience")
+	flag.StringVar(&app.CookieDomain, "cookie-domain", "localhost", "cookie domain")
+	flag.StringVar(&app.Domain, "domain", "example.com", "domain")
 	flag.Parse() // parse everything we read from cmd line
 
 	// connect to db
@@ -36,7 +47,16 @@ func main(){
 	app.PostgresDB = &dbrepo.PostgresDBRepo{DB: conn}
 	defer app.PostgresDB.Connection().Close() // closing connection pool after using
 
-	app.Domain = "example.com"
+	app.auth = AuthStruct{
+		Issuer: app.JWTIssuer,
+		Audience: app.JWTAudience,
+		Secret: app.JWTSecret,
+		TokenExpiry: time.Minute * 15,
+		RefreshExpiry: time.Hour * 24,
+		CookiePath: "/", // root-level of application
+		CookieName: "go_refresh_token",
+		CookieDomain: app.CookieDomain,
+	}
 
 	log.Println("Starting application on port", port)
 

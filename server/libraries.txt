@@ -17,3 +17,10 @@ docker-compose up -d (pull postgres image & generate postgres-data folder)
 go get github.com/jackc/pgx/v5
 go get github.com/jackc/pgconn
 go get github.com/jackc/pgx/v5/pgxpool@v5.5.2
+
+// authentication
+go get -u github.com/golang-jwt/jwt/v5
+
+// login credentials
+email: admin@example.com
+password: secret

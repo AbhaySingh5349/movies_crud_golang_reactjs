@@ -23,6 +23,10 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/movies", app.AllMovies)
 
+	mux.Post("/authenticate", app.Authenticate)
+	mux.Get("/refreshToken", app.RefreshToken)
+	mux.Post("/logout", app.Logout)
+
 	return mux;
 	
 }

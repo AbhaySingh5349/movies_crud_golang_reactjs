@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
+import axios from 'axios';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -12,7 +13,7 @@ import { Alert } from '../index';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setJwtToken } = useContext(JwtContext);
+  const { setJwtToken, invokeRefreshToken } = useContext(JwtContext);
 
   const [alert, setAlert] = useState<{
     type: 'danger' | 'success';
@@ -37,10 +38,14 @@ const Login = () => {
     data: LoginData
   ) => {
     try {
-      console.log('Login successfull: ', data);
+      console.log('Login data: ', data);
       if (data.email === 'admin@example.com') {
+        const { data: token } = await axios.post('/authenticate', data);
+        console.log('Login response: ', token);
+        setJwtToken(token.access_token);
+        invokeRefreshToken(true);
         setAlert({ type: 'success', message: 'Success! Logged-in as admin.' });
-        setJwtToken('abc');
+
         reset();
         navigate('/');
       } else {
