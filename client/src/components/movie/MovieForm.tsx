@@ -46,7 +46,7 @@ const MovieForm = () => {
       genre_horror: data.genre_horror,
       genre_romance: data.genre_romance,
       genre_scifi: data.genre_scifi,
-      rating: data.rating,
+      mpaa_rating: data.mpaa_rating,
     };
 
     if (movieId) {
@@ -251,11 +251,11 @@ const MovieForm = () => {
       <input
         type="number"
         placeholder="rate movie on scale of 1-10"
-        {...register('rating')}
+        {...register('mpaa_rating')}
         className="form-input"
       />
-      {errors.rating && (
-        <span className="text-primary-error">{errors.rating.message}</span>
+      {errors.mpaa_rating && (
+        <span className="text-primary-error">{errors.mpaa_rating.message}</span>
       )}
       <button
         className="btn btn-primary w-1/2 mx-auto absolute left-1/2 transform -translate-x-1/2 mt-16"

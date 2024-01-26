@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"encoding/json"
 )
 
 type PayloadStruct struct {
@@ -25,7 +24,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 		Version: "1.0.0",
 	}
 
-	out, err := json.Marshal(payload)
+/*	out, err := json.Marshal(payload)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -33,49 +32,18 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
+*/
+	_ = app.writeJSON(w, http.StatusOK, payload)
 }
 
 func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
-/*	var movies []models.MovieStruct
-
-	rd, _ := time.Parse("2006-01-02", "1986-03-07")
-
-	highlander := models.MovieStruct {
-		ID: 1,
-		Title: "Highlander",
-		ReleaseDate: rd,
-		Rating: 8,
-		RunTime: 116,
-		Description: "A very nice movie",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-
-	movies = append(movies, highlander)
-
-	rd, _ = time.Parse("2006-01-02", "1981-06-12")
-
-	rotla := models.MovieStruct {
-		ID: 2,
-		Title: "Raiders of the Lost Ark",
-		ReleaseDate: rd,
-		Rating: 9,
-		RunTime: 115,
-		Description: "Another very nice movie",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-
-	movies = append(movies, rotla)
-*/
-
 	movies, err := app.PostgresDB.AllMovies()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	var out []byte
+/*	var out []byte
 	if len(movies) == 0{
 		out, err = json.Marshal([]string{})
 	}else{
@@ -89,4 +57,6 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
+*/
+	_ = app.writeJSON(w, http.StatusOK, movies)
 }
