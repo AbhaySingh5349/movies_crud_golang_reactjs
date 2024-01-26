@@ -6,7 +6,7 @@ interface Movie {
   id: number;
   title: string;
   release_date: Date;
-  rating: string;
+  mpaa_rating: string;
 }
 
 const Movies = () => {
@@ -42,8 +42,8 @@ const Movies = () => {
       </div>
 
       {/* Movie Data */}
-      {movies.length > 0 &&
-        movies?.map((movie: Movie) => (
+      {movies?.length > 0 &&
+        movies.map((movie: Movie) => (
           <React.Fragment key={movie?.id}>
             <Link
               key={movie?.title}
@@ -57,7 +57,7 @@ const Movies = () => {
               </h3>
             </Link>
             <div className="col-span-1">{formatDate(movie?.release_date)}</div>
-            <div className="col-span-1">{movie?.rating}</div>
+            <div className="col-span-1">{movie?.mpaa_rating}</div>
           </React.Fragment>
         ))}
     </div>

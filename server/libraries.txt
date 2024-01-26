@@ -9,3 +9,11 @@ go get -u github.com/go-chi/chi/v5
 
 // for interaction between server & client
 enable CORS at server (create middleware)
+
+// add postrgress creat_tables.sql & docker-compose.yml
+docker-compose up -d (pull postgres image & generate postgres-data folder)
+
+// connecting with postgres
+go get github.com/jackc/pgx/v5
+go get github.com/jackc/pgconn
+go get github.com/jackc/pgx/v5/pgxpool@v5.5.2

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"encoding/json"
-	"time"
-	"server/internal/models"
 )
 
 type PayloadStruct struct {
@@ -38,7 +36,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
-	var movies []models.MovieStruct
+/*	var movies []models.MovieStruct
 
 	rd, _ := time.Parse("2006-01-02", "1986-03-07")
 
@@ -69,8 +67,21 @@ func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
 	}
 
 	movies = append(movies, rotla)
+*/
 
-	out, err := json.Marshal(movies)
+	movies, err := app.PostgresDB.AllMovies()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var out []byte
+	if len(movies) == 0{
+		out, err = json.Marshal([]string{})
+	}else{
+		out, err = json.Marshal(movies)
+	}
+	
 	if err != nil {
 		fmt.Println(err)
 	}

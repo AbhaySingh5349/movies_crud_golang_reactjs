@@ -14,5 +14,5 @@ export interface MovieData {
   genre_horror: boolean;
   genre_romance: boolean;
   genre_scifi: boolean;
-  rating: number;
+  mpaa_rating: string;
 }
