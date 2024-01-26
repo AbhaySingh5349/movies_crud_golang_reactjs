@@ -6,3 +6,6 @@ go mod init server
 
 // for routing
 go get -u github.com/go-chi/chi/v5
+
+// for interaction between server & client
+enable CORS at server (create middleware)

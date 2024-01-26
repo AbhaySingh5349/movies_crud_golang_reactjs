@@ -25,3 +25,9 @@ npm install react-icons
 npm install zod
 npm i react-hook-form
 npm i @hookform/resolvers
+
+// to interact with backend
+npm install axios
+
+// for interaction between server & client
+enable CORS at server (create middleware)

@@ -1,8 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 
 import { Layout, Movies, Login, MovieInfo, Genres, MovieForm } from './index';
 
+axios.defaults.baseURL = process.env.REACT_APP_AXIOS_BASE_URL;
+axios.defaults.withCredentials = true; // to save cookie in browser
+
 const App = () => {
+  console.log(
+    'process.env.REACT_APP_AXIOS_BASE_URL: ',
+    process.env.REACT_APP_AXIOS_BASE_URL
+  );
   return (
     <main>
       <Routes>

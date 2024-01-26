@@ -14,9 +14,14 @@ func (app *application) routes() http.Handler {
 
 	// middlewares
 	mux.Use(middleware.Recoverer) // when app run into panics, it logs with backtrace, send necessary headers (HTTP500) and brings things back up so that app does not grind to halt
+	mux.Use(app.enableCORS)
 
 	// execute Hello function when we are looking at root/hello level of app i.e http://localhost:8080/hello
 	mux.Get("/hello", app.Hello) 
+
+	mux.Get("/", app.Home)
+
+	mux.Get("/movies", app.AllMovies)
 
 	return mux;
 	
