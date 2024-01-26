@@ -1,15 +1,27 @@
 import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as z from 'zod';
 
 import { LoginSchema } from '../../types/validations';
-
 import { LoginData } from '../../types';
+import { JwtContext } from '../../context/JwtContext';
+import { Alert } from '../index';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setJwtToken } = useContext(JwtContext);
+
+  const [alert, setAlert] = useState<{
+    type: 'danger' | 'success';
+    message: string;
+  } | null>(null);
+
+  const closeAlert = () => {
+    setAlert(null);
+  };
 
   const {
     handleSubmit,
@@ -25,12 +37,22 @@ const Login = () => {
     data: LoginData
   ) => {
     try {
-      console.log(`Login successfull: ${data.email}`);
-      alert(`Login successfull: ${data}`);
-      reset();
-      navigate('/');
+      console.log('Login successfull: ', data);
+      if (data.email === 'admin@example.com') {
+        setAlert({ type: 'success', message: 'Success! Logged-in as admin.' });
+        setJwtToken('abc');
+        reset();
+        navigate('/');
+      } else {
+        setAlert({
+          type: 'danger',
+          message: 'Failure! Failed to login as admin.',
+        });
+        setJwtToken('');
+        // navigate('/');
+      }
     } catch (err) {
-      alert(`Failed to login: ${err}`);
+      setAlert({ type: 'danger', message: `Failed to login: ${err}` });
     }
   };
 
@@ -40,6 +62,9 @@ const Login = () => {
 
   return (
     <div className="grow flex flex-col justify-center">
+      {alert && (
+        <Alert type={alert.type} message={alert.message} onClose={closeAlert} />
+      )}
       <h1 className="text-2xl text-center font-semibold text-primary-100 mb-4">
         Login
       </h1>
@@ -56,7 +81,7 @@ const Login = () => {
         />
         {errors.email && (
           <span className="text-primary-error text-left">
-            {errors.email.message}
+            {errors?.email?.message}
           </span>
         )}
         {inputHeader('Password')}
@@ -67,7 +92,9 @@ const Login = () => {
           className="form-input"
         />
         {errors.password && (
-          <span className="text-primary-error">{errors.password.message}</span>
+          <span className="text-primary-error">
+            {errors?.password?.message}
+          </span>
         )}
         <button
           className="btn btn-primary w-1/2 mx-auto absolute left-1/2 transform -translate-x-1/2 mt-16"

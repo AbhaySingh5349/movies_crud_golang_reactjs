@@ -18,7 +18,7 @@ const MovieInfo = () => {
       description: 'it is a sc-fi movie',
     };
     setMovie(data);
-  }, [movie]);
+  }, []);
 
   return (
     <div className="ml-8">

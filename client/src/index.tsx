@@ -4,6 +4,7 @@ import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { JwtContextProvider } from './context/JwtContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <JwtContextProvider>
+        <App />
+      </JwtContextProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -7,3 +7,4 @@ export { default as Login } from './login/Login';
 export { default as MovieInfo } from './movie/MovieInfo';
 export { default as Genres } from './genres/Genres';
 export { default as MovieForm } from './movie/MovieForm';
+export { default as Alert } from './popups/Alert';

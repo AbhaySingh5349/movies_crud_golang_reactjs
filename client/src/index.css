@@ -11,6 +11,10 @@
     @apply bg-primary-100 text-white w-20;
   }
 
+  .btn-link-out {
+    @apply bg-primary-error text-white w-20;
+  }
+
   .btn-primary {
     @apply bg-primary-100 text-white;
   }

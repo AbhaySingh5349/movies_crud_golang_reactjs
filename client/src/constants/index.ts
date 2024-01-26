@@ -36,10 +36,12 @@ export const loggedOutCategories = [
   {
     label: 'Movies',
     icon: BiSolidCameraMovie,
+    route: '/',
   },
   {
     label: 'Genres',
     icon: IoOptions,
+    route: 'genres',
   },
 ];
 
