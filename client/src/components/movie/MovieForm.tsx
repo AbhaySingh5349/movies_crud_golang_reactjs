@@ -183,6 +183,18 @@ const MovieForm = () => {
     return <h2 className="text-xl mt-4 text-primary-500">{text}</h2>;
   }
 
+  const deleteMovie = async (e: any) => {
+    e.preventDefault();
+
+    const headers: HeadersType = {
+      'Content-Type': 'application/json', // Specify the content type, e.g., JSON
+      Authorization: `Bearer ${jwtToken}`, // If using authorization, provide your token
+    };
+    await axios.delete(`/admin/movies/${movieId}`, { headers });
+    alert('Movie deleted succesfully');
+    navigate('/');
+  };
+
   return (
     <form
       onSubmit={handleSubmit(formSubmitHandler)}
@@ -281,12 +293,20 @@ const MovieForm = () => {
       >
         {isSubmitting
           ? movieId
-            ? 'Updating Place...'
-            : 'Adding Place...'
+            ? 'Updating Movie...'
+            : 'Adding Movie...'
           : movieId
-          ? 'Update Place'
-          : 'Add Place'}
+          ? 'Update Movie'
+          : 'Add Movie'}
       </button>
+      {movieId && (
+        <button
+          className="btn btn-secondary mx-auto absolute right-0 mt-16"
+          onClick={deleteMovie}
+        >
+          Delete Movie
+        </button>
+      )}
     </form>
   );
 };

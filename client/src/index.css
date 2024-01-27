@@ -19,6 +19,10 @@
     @apply bg-primary-100 text-white;
   }
 
+  .btn-secondary {
+    @apply bg-primary-error text-white;
+  }
+
   .form-input {
     @apply w-full border rounded-lg my-2 px-2 py-1;
   }
