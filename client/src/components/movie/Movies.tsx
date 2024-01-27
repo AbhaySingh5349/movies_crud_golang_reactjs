@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+import { JwtContext } from '../../context/JwtContext';
 
 interface Movie {
   id: number;
@@ -9,19 +11,55 @@ interface Movie {
   mpaa_rating: string;
 }
 
+type HeadersType = {
+  'Content-Type': string;
+  Authorization?: string;
+};
+
 const Movies = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const navigate = useNavigate();
+
+  const { pathname } = useLocation();
+  console.log('PATHNAME IN MOVIES: ', pathname);
+  const isAdminRoute = pathname.split('/')?.[1] === 'admin';
+  console.log('isAdminRoute: ', isAdminRoute);
+
+  const { jwtToken } = useContext(JwtContext);
+
   useEffect(() => {
-    axios
-      .get('/movies')
-      .then(({ data }) => {
-        console.log('all movies: ', data);
-        setMovies(data);
-      })
-      .catch((err) => {
-        alert(`Error in fetching results: ${err}`);
-      });
-  }, []);
+    if (isAdminRoute && jwtToken === '') {
+      alert('Only admins have access to this route');
+      navigate('/');
+    }
+    const headers: HeadersType = {
+      'Content-Type': 'application/json', // Specify the content type, e.g., JSON
+    };
+
+    if (isAdminRoute) {
+      headers['Authorization'] = `Bearer ${jwtToken}`; // If using authorization, provide your token
+
+      axios
+        .get('/admin/movies', { headers })
+        .then(({ data }) => {
+          console.log('all movies: ', data);
+          setMovies(data);
+        })
+        .catch((err) => {
+          alert(`Error in fetching results for admin route: ${err}`);
+        });
+    } else {
+      axios
+        .get('/movies')
+        .then(({ data }) => {
+          console.log('all movies: ', data);
+          setMovies(data);
+        })
+        .catch((err) => {
+          alert(`Error in fetching results: ${err}`);
+        });
+    }
+  }, [isAdminRoute, navigate]);
 
   function formatDate(dateString: any) {
     const date = new Date(dateString);
@@ -46,8 +84,11 @@ const Movies = () => {
         movies.map((movie: Movie) => (
           <React.Fragment key={movie?.id}>
             <Link
-              key={movie?.title}
-              to={`/movies/${movie?.title}`}
+              to={
+                isAdminRoute
+                  ? `/admin/movies/${movie?.id}`
+                  : `/movies/${movie?.id}`
+              }
               className="col-span-1 hover:bg-neutral-100"
             >
               <h3>

@@ -137,7 +137,7 @@ func (j *AuthStruct) GetTokenFromHeaderAndVerify(w http.ResponseWriter, r *http.
 	// declare an empty claims
 	claims := &Claims{}
 
-	// parse the token
+	// parse the token & store claims by token
 	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error){
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"errors"
+	"log"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -41,6 +42,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) AllMovies(w http.ResponseWriter, r *http.Request) {
+	log.Println("ALL MOVIES invoked")
 	movies, err := app.PostgresDB.AllMovies()
 	if err != nil {
 		fmt.Println(err)
@@ -169,4 +171,17 @@ func (app *application) RefreshToken(w http.ResponseWriter, r *http.Request) {
 func (app *application) Logout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, app.auth.GetExpiredRefreshCookie())
 	w.WriteHeader(http.StatusAccepted)
+}
+
+func (app *application) MovieCatalog(w http.ResponseWriter, r *http.Request) {
+	log.Println("MovieCatalog invoked")
+	authHeader := r.Header.Get("Authorization")
+	log.Println("authHeader VALUE: ", authHeader)
+	movies, err := app.PostgresDB.AllMovies()
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, movies)
 }

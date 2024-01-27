@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,8 @@ import * as z from 'zod';
 import { MovieSchema } from '../../types/validations';
 import { MovieData } from '../../types';
 
+import { JwtContext } from '../../context/JwtContext';
+
 interface GenresObject {
   [key: string]: boolean;
 }
@@ -16,6 +18,9 @@ const MovieForm = () => {
   const navigate = useNavigate();
 
   const { movieId } = useParams();
+  console.log('ID in Movies Form: ', movieId);
+
+  const { jwtToken } = useContext(JwtContext);
 
   const {
     handleSubmit,
@@ -28,8 +33,13 @@ const MovieForm = () => {
   });
 
   useEffect(() => {
+    if (jwtToken === '') {
+      alert('Only admins have access to this route');
+      navigate('/');
+    }
+
     if (!movieId) return;
-  }, [movieId, navigate, reset]);
+  }, [jwtToken, navigate, movieId, reset]);
 
   const formSubmitHandler: SubmitHandler<z.infer<typeof MovieSchema>> = async (
     data: MovieData

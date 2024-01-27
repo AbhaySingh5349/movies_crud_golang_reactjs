@@ -10,7 +10,9 @@ const default_movie = {
 
 const MovieInfo = () => {
   const [movie, setMovie] = useState(default_movie);
+
   const { movieId } = useParams();
+  console.log('ID in Movies Info: ', movieId);
 
   useEffect(() => {
     const data = {

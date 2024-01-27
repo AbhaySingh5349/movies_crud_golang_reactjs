@@ -18,17 +18,17 @@ export const loggedInCategories = [
   {
     label: 'Add Movie',
     icon: MdAddCard,
-    route: 'profile/movies/new',
+    route: 'admin/movies/new',
   },
   {
     label: 'Manage Catalogue',
     icon: BiSolidCommentEdit,
-    route: 'profile/movies',
+    route: 'admin/movies',
   },
   {
     label: 'GraphQL',
     icon: PiGraphBold,
-    route: 'searchMovie',
+    route: 'admin/search',
   },
 ];
 
