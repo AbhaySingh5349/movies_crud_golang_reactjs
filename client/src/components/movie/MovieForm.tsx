@@ -24,6 +24,11 @@ interface GenresObject {
   [key: string]: boolean;
 }
 
+type HeadersType = {
+  'Content-Type': string;
+  Authorization?: string;
+};
+
 const MovieForm = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
 
@@ -85,22 +90,60 @@ const MovieForm = () => {
 
     const movieData = {
       title: data.title,
-      releaseDate: data.releaseDate,
+      release_date: new Date(data.releaseDate),
       description: data.description,
       runtime: data.runtime,
       mpaa_rating: data.mpaa_rating,
       genres: updatedGenres,
-      geners_array: checkedGenreIds,
+      genres_array: checkedGenreIds,
     };
 
     console.log('input movie data: ', movieData);
 
+    const headers: HeadersType = {
+      'Content-Type': 'application/json', // Specify the content type, e.g., JSON
+      Authorization: `Bearer ${jwtToken}`, // If using authorization, provide your token
+    };
+
     if (movieId) {
       // Update existing movie
       console.log('UPDATE EXISTING Movie');
+      try {
+        const { data } = await axios.patch(
+          `/admin/movies/${movieId}`,
+          JSON.stringify(movieData),
+          {
+            headers,
+          }
+        );
+        console.log('UPDATED MOVIE FROM DB: ', data);
+        alert('movie updated');
+        reset();
+        navigate('/');
+      } catch (err) {
+        alert(
+          `Failed to update movie, please check if you are logged-in: ${err}`
+        );
+        navigate('/');
+      }
     } else {
       // New Movie
       console.log('ADD NEW Movie');
+      try {
+        const { data } = await axios.put(
+          '/admin/movies/new',
+          JSON.stringify(movieData),
+          {
+            headers,
+          }
+        );
+        console.log('NEW MOVIE FROM DB: ', data);
+        alert('new movie added');
+        reset();
+        navigate('/');
+      } catch (err) {
+        alert(`Failed to add movie, please check if you are logged-in: ${err}`);
+      }
     }
   };
 

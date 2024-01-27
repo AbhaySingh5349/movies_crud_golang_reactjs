@@ -44,8 +44,8 @@ const MovieInfo = () => {
     <div className="ml-8">
       <h1 className="text-xl font-bold mb-2">{movie?.title}</h1>
       <p>
-        {formatDate(movie?.release_date)} , Runtime: {movie?.runtime} Rated{' '}
-        {movie?.mpaa_rating}
+        {formatDate(movie?.release_date)} , Runtime: {movie?.runtime} mins. and
+        Rated {movie?.mpaa_rating}
       </p>
       <div className="mt-4 mb-4">
         {movie?.genres.map((item: any) => (

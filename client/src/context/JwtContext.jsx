@@ -28,7 +28,7 @@ export const JwtContextProvider = ({ children }) => {
               }
             })
             .catch((err) => {
-              alert('Login again message from jwt context');
+              // alert('Login again message from jwt context');
               navigate('/login');
             });
         }, 600000);
