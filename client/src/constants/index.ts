@@ -46,11 +46,32 @@ export const loggedOutCategories = [
 ];
 
 export const genres = [
-  'Action',
-  'Animation',
-  'Comedy',
-  'Thriller',
-  'Horror',
-  'Romance',
-  'Sci-fi',
+  {
+    id: 5,
+    label: 'Action',
+  },
+  {
+    id: 10,
+    label: 'Animation',
+  },
+  {
+    id: 1,
+    label: 'Comedy',
+  },
+  {
+    id: 6,
+    label: 'Thriller',
+  },
+  {
+    id: 3,
+    lebel: 'Horror',
+  },
+  {
+    id: 4,
+    label: 'Romance',
+  },
+  {
+    id: 2,
+    label: 'Sci-fi',
+  },
 ];

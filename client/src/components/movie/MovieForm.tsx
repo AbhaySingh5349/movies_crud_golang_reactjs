@@ -10,6 +10,16 @@ import { MovieData } from '../../types';
 
 import { JwtContext } from '../../context/JwtContext';
 
+type GenreFormKey =
+  | 'genre_action'
+  | 'genre_animation'
+  | 'genre_comedy'
+  | 'genre_thriller'
+  | 'genre_horror'
+  | 'genre_romance'
+  | 'genre_scifi'
+  | 'mpaa_rating';
+
 interface GenresObject {
   [key: string]: boolean;
 }
@@ -36,6 +46,7 @@ const MovieForm = () => {
     if (jwtToken === '') {
       alert('Only admins have access to this route');
       navigate('/');
+      return;
     }
 
     if (!movieId) return;
@@ -60,31 +71,11 @@ const MovieForm = () => {
     };
 
     if (movieId) {
-      // Update existing Place
-      //   console.log('UPDATE EXISTING PLACE');
-      //   try {
-      //     await axios.put('/movies', {
-      //       movieId,
-      //       ...placeData,
-      //     });
-      //     alert('form submitted with updates');
-      //     reset();
-      //     navigate('/profile/accomodations');
-      //   } catch (err) {
-      //     alert(`Failed to login: ${err}`);
-      //     navigate('/login');
-      //   }
+      // Update existing movie
+      console.log('UPDATE EXISTING Movie');
     } else {
-      // New Place
-      console.log('ADD NEW PLACE: ');
-      //   try {
-      //     await axios.post('/accomodations', placeData);
-      //     alert('form submitted');
-      //     reset();
-      //     navigate('/profile/accomodations');
-      //   } catch (err) {
-      //     alert(`Failed to upload, please check if you are logged-in: ${err}`);
-      //   }
+      // New Movie
+      console.log('ADD NEW Movie: ', movieData);
     }
   };
 
@@ -132,7 +123,7 @@ const MovieForm = () => {
       <div className="grid gap-1 grid-cols-2 md:grid-cols-3 mt-2">
         <label className="flex gap-1 items-center border p-4 cursor-pointer">
           <input type="checkbox" {...register('genre_action')} />
-          <span>Wifi</span>
+          <span>Action</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -150,7 +141,7 @@ const MovieForm = () => {
         </label>
         <label className="flex gap-1 items-center border p-4 cursor-pointer">
           <input type="checkbox" {...register('genre_animation')} />
-          <span>LCD</span>
+          <span>Animation</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -260,7 +251,7 @@ const MovieForm = () => {
       {inputHeader('Rating')}
       <input
         type="number"
-        placeholder="rate movie on scale of 1-10"
+        placeholder="mpaa ratings accepted"
         {...register('mpaa_rating')}
         className="form-input"
       />

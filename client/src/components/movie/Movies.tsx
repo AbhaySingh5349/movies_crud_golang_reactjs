@@ -31,7 +31,9 @@ const Movies = () => {
     if (isAdminRoute && jwtToken === '') {
       alert('Only admins have access to this route');
       navigate('/');
+      return;
     }
+
     const headers: HeadersType = {
       'Content-Type': 'application/json', // Specify the content type, e.g., JSON
     };
@@ -59,7 +61,7 @@ const Movies = () => {
           alert(`Error in fetching results: ${err}`);
         });
     }
-  }, [isAdminRoute, navigate]);
+  }, [isAdminRoute, jwtToken, navigate]);
 
   function formatDate(dateString: any) {
     const date = new Date(dateString);

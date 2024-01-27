@@ -17,11 +17,12 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Movies />} />
           <Route path="/movies/:movieId" element={<MovieInfo />} />
+          <Route path="/genres" element={<Genres />} />
+          <Route path="/login" element={<Login />} />
+
           <Route path="/admin/movies/new" element={<MovieForm />} />
           <Route path="/admin/movies/:movieId" element={<MovieForm />} />
           <Route path="/admin/movies" element={<Movies />} />
-          <Route path="/genres" element={<Genres />} />
-          <Route path="/login" element={<Login />} />
         </Route>
       </Routes>
     </main>

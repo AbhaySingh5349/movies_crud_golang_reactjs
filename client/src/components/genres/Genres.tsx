@@ -11,10 +11,10 @@ const Genres = () => {
         {genres.map((genre) => (
           <Link
             to={`/genres/${genre}`}
-            key={genre}
+            key={genre.id}
             className="bg-gray-200 text-gray-800 py-1 px-2 rounded cursor-pointer hover:bg-gray-300 transition duration-300"
           >
-            {genre}
+            {genre.label}
           </Link>
         ))}
       </div>

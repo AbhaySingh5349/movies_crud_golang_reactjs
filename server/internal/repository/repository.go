@@ -9,6 +9,8 @@ import (
 type DatabaseRepo interface {
 	Connection() *sql.DB
 	AllMovies() ([]*models.MovieStruct, error)
+	GetMovieById(id int) (*models.MovieStruct, error)
+	GetMovieByIdForEdit(id int) (*models.MovieStruct, []*models.GenreStruct, error)
 	GetUserByEmail(email string) (*models.UserStruct, error)
 	GetUserByID(id int) (*models.UserStruct, error)
 }

@@ -29,8 +29,5 @@ export const MovieSchema = z.object({
   genre_horror: z.boolean().default(false),
   genre_romance: z.boolean().default(false),
   genre_scifi: z.boolean().default(false),
-  mpaa_rating: z.coerce
-    .string()
-    .min(1, { message: 'Min. allowed rating is 1' })
-    .max(10, { message: 'Max. allowed rating is 10' }),
+  mpaa_rating: z.coerce.string(),
 });

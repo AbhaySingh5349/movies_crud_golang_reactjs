@@ -1,6 +1,7 @@
 package main
 
 import (
+	"server/internal/models"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -8,6 +9,7 @@ import (
 	"log"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/go-chi/chi/v5"
 )
 
 type PayloadStruct struct {
@@ -184,4 +186,46 @@ func (app *application) MovieCatalog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = app.writeJSON(w, http.StatusOK, movies)
+}
+
+func (app *application) GetMovieById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "movieId")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	movie, err := app.PostgresDB.GetMovieById(movieID)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, movie)
+}
+
+func (app *application) GetMovieByIdForEdit(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "movieId")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	movie, genres, err := app.PostgresDB.GetMovieByIdForEdit(movieID)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	var payload = struct {
+		Movie  *models.MovieStruct   `json:"movie"`
+		Genres []*models.GenreStruct `json:"genres"`
+	}{
+		movie,
+		genres,
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, payload)
 }
