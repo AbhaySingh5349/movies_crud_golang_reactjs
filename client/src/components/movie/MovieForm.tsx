@@ -62,14 +62,47 @@ const MovieForm = () => {
   });
 
   useEffect(() => {
-    if (jwtToken === '') {
-      alert('Only admins have access to this route');
-      navigate('/');
-      return;
-    }
+    if (!movieId || !genres) return;
 
-    if (!movieId) return;
-  }, [jwtToken, navigate, movieId, reset]);
+    axios
+      .get(`/movies/${movieId}`)
+      .then(({ data }) => {
+        console.log('movie by id data: ', data);
+
+        const genreMap: Record<string, boolean> = {};
+        genres.forEach((genre) => {
+          genreMap[genre.genre] = data.genres.some(
+            (item: any) => item.genre === genre.genre
+          );
+        });
+
+        console.log('genre map: ', genreMap);
+
+        reset({
+          title: data.title,
+          release_date: data.release_date.replace('T00:00:00Z', ''),
+          runtime: data.runtime,
+          mpaa_rating: data.mpaa_rating,
+          description: data.description,
+          genre_Action: genreMap['Action'],
+          genre_Adventure: genreMap['Adventure'],
+          genre_Animation: genreMap['Animation'],
+          genre_Comedy: genreMap['Comedy'],
+          genre_Drama: genreMap['Drama'],
+          genre_Fantasy: genreMap['Fantasy'],
+          genre_Horror: genreMap['Horror'],
+          genre_Mystery: genreMap['Mystery'],
+          genre_Romance: genreMap['Romance'],
+          'genre_Sci-Fi': genreMap['Sci-Fi'],
+          genre_Superhero: genreMap['Superhero'],
+          genre_Thriller: genreMap['Thriller'],
+          genre_Crime: genreMap['Crime'],
+        });
+      })
+      .catch((err) => {
+        alert(`Error in fetching results: ${err}`);
+      });
+  }, [movieId, navigate, reset]);
 
   const formSubmitHandler: SubmitHandler<z.infer<typeof MovieSchema>> = async (
     data: MovieData
@@ -90,7 +123,7 @@ const MovieForm = () => {
 
     const movieData = {
       title: data.title,
-      release_date: new Date(data.releaseDate),
+      release_date: new Date(data.release_date),
       description: data.description,
       runtime: data.runtime,
       mpaa_rating: data.mpaa_rating,
@@ -111,7 +144,7 @@ const MovieForm = () => {
       try {
         const { data } = await axios.patch(
           `/admin/movies/${movieId}`,
-          JSON.stringify(movieData),
+          JSON.stringify({ ...movieData, id: parseInt(movieId, 10) }),
           {
             headers,
           }
@@ -124,7 +157,6 @@ const MovieForm = () => {
         alert(
           `Failed to update movie, please check if you are logged-in: ${err}`
         );
-        navigate('/');
       }
     } else {
       // New Movie
@@ -170,11 +202,13 @@ const MovieForm = () => {
       <input
         type="date"
         placeholder="release date"
-        {...register('releaseDate')}
+        {...register('release_date')}
         className="form-input"
       />
-      {errors.releaseDate && (
-        <span className="text-primary-error">{errors.releaseDate.message}</span>
+      {errors.release_date && (
+        <span className="text-primary-error">
+          {errors.release_date.message}
+        </span>
       )}
       {inputHeader('Runtime')}
       <input

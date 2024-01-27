@@ -327,3 +327,47 @@ func (app *application) getPoster(movie models.MovieStruct) models.MovieStruct {
 
 	return movie
 }
+
+func (app *application) UpdateMovie(w http.ResponseWriter, r *http.Request) {
+	log.Println("UPDATE MOVIE INVOKED")
+	var payload models.MovieStruct
+
+	err := app.readJSON(w, r, &payload)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	movie, err := app.PostgresDB.GetMovieById(payload.ID)
+	log.Println("movie to update: ", movie, "with payload: ", payload)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	movie.Title = payload.Title
+	movie.ReleaseDate = payload.ReleaseDate
+	movie.Description = payload.Description
+	movie.MPAARating = payload.MPAARating
+	movie.RunTime = payload.RunTime
+	movie.UpdatedAt = time.Now()
+
+	err = app.PostgresDB.UpdateMovie(*movie)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	err = app.PostgresDB.UpdateMovieGenres(movie.ID, payload.GenresArray)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	resp := JSONResponse{
+		Error: false,
+		Message: "movie updated",
+	}
+
+	app.writeJSON(w, http.StatusAccepted, resp)
+}

@@ -15,7 +15,7 @@ export const MovieSchema = z.object({
     .string()
     .min(3, 'Title must be at least 3 characters')
     .max(50, 'Title exceeds limit of 50 characters'),
-  releaseDate: z.coerce.date().refine((date) => date > new Date(), {
+  release_date: z.coerce.date().refine((date) => date > new Date(), {
     message: 'Date must be in future',
   }),
   runtime: z.coerce.number().nonnegative(),

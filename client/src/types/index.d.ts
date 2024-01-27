@@ -5,7 +5,7 @@ export interface LoginData {
 
 export interface MovieData {
   title: string;
-  releaseDate: Date;
+  release_date: Date;
   runtime: number;
   mpaa_rating: string;
   description: string;
