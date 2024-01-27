@@ -229,3 +229,13 @@ func (app *application) GetMovieByIdForEdit(w http.ResponseWriter, r *http.Reque
 
 	_ = app.writeJSON(w, http.StatusOK, payload)
 }
+
+func (app *application) AllGenres(w http.ResponseWriter, r *http.Request) {
+	genres, err := app.PostgresDB.AllGenres()
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	_ = app.writeJSON(w, http.StatusOK, genres)
+}

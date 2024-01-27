@@ -2,22 +2,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const default_movie = {
-  title: '',
-  description: '',
-};
-
 interface Movie {
   id: number;
   title: string;
-  description: string;
-  image?: string;
-  mpaa_rating: string;
+  release_date: Date;
   runtime: number;
+  mpaa_rating: string;
+  description: string;
   genres: {
     id: number;
     genre: string;
   }[];
+  image?: string;
 }
 
 const MovieInfo = () => {
@@ -38,9 +34,19 @@ const MovieInfo = () => {
       });
   }, []);
 
+  function formatDate(dateString: any) {
+    if (!dateString) return;
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  }
+
   return (
     <div className="ml-8">
       <h1 className="text-xl font-bold mb-2">{movie?.title}</h1>
+      <p>
+        {formatDate(movie?.release_date)} , Runtime: {movie?.runtime} Rated{' '}
+        {movie?.mpaa_rating}
+      </p>
       <div className="mt-4 mb-4">
         {movie?.genres.map((item: any) => (
           <span
@@ -52,18 +58,16 @@ const MovieInfo = () => {
         ))}
       </div>
       <hr />
-      {/* <img
-        src={`https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg`}
-        alt={`movie.name`}
-        className="w-full h-1/2 object-cover mb-4 rounded mt-4"
-      /> */}
-      <div className="w-48 h-48 overflow-hidden my-4">
-        <img
-          className="w-full h-full object-cover"
-          src={movie?.image}
-          alt={movie?.title}
-        />
-      </div>
+
+      {movie?.image && (
+        <div className="w-48 h-64 overflow-hidden my-4">
+          <img
+            className="w-full h-full object-cover"
+            src={`https://image.tmdb.org/t/p/w200/${movie?.image}`}
+            alt={movie?.title}
+          />
+        </div>
+      )}
       <hr />
       <p className="text-gray-600 mt-4">{movie?.description}</p>
     </div>

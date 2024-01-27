@@ -18,16 +18,23 @@ export const MovieSchema = z.object({
   releaseDate: z.coerce.date().refine((date) => date > new Date(), {
     message: 'Date must be in future',
   }),
+  runtime: z.coerce.number().nonnegative(),
   description: z
     .string()
     .min(3, 'Description must be at least 3 characters')
     .max(200, 'Description exceeds limit of 200 characters'),
-  genre_action: z.boolean().default(false),
-  genre_animation: z.boolean().default(false),
-  genre_comedy: z.boolean().default(false),
-  genre_thriller: z.boolean().default(false),
-  genre_horror: z.boolean().default(false),
-  genre_romance: z.boolean().default(false),
-  genre_scifi: z.boolean().default(false),
+  genre_Action: z.boolean().default(false),
+  genre_Adventure: z.boolean().default(false),
+  genre_Animation: z.boolean().default(false),
+  genre_Comedy: z.boolean().default(false),
+  genre_Drama: z.boolean().default(false),
+  genre_Fantasy: z.boolean().default(false),
+  genre_Horror: z.boolean().default(false),
+  genre_Mystery: z.boolean().default(false),
+  genre_Romance: z.boolean().default(false),
+  'genre_Sci-Fi': z.boolean().default(false),
+  genre_Superhero: z.boolean().default(false),
+  genre_Thriller: z.boolean().default(false),
+  genre_Crime: z.boolean().default(false),
   mpaa_rating: z.coerce.string(),
 });

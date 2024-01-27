@@ -6,13 +6,20 @@ export interface LoginData {
 export interface MovieData {
   title: string;
   releaseDate: Date;
-  description: string;
-  genre_action: boolean;
-  genre_animation: boolean;
-  genre_comedy: boolean;
-  genre_thriller: boolean;
-  genre_horror: boolean;
-  genre_romance: boolean;
-  genre_scifi: boolean;
+  runtime: number;
   mpaa_rating: string;
+  description: string;
+  genre_Action: boolean;
+  genre_Adventure: boolean;
+  genre_Animation: boolean;
+  genre_Comedy: boolean;
+  genre_Drama: boolean;
+  genre_Fantasy: boolean;
+  genre_Horror: boolean;
+  genre_Mystery: boolean;
+  genre_Romance: boolean;
+  'genre_Sci-Fi': boolean;
+  genre_Superhero: boolean;
+  genre_Thriller: boolean;
+  genre_Crime: boolean;
 }

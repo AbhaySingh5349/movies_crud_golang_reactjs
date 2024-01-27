@@ -268,3 +268,35 @@ func (m *PostgresDBRepo) GetUserByID(id int) (*models.UserStruct, error) {
 
 	return &user, nil
 }
+
+func (m *PostgresDBRepo) AllGenres() ([]*models.GenreStruct, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `select id, genre, created_at, updated_at from genres order by genre`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var genres []*models.GenreStruct
+
+	for rows.Next() {
+		var g models.GenreStruct
+		err := rows.Scan(
+			&g.ID,
+			&g.Genre,
+			&g.CreatedAt,
+			&g.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		genres = append(genres, &g)
+	}
+
+	return genres, nil
+}

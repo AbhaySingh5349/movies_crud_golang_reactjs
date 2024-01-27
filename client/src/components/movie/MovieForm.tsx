@@ -1,30 +1,44 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as z from 'zod';
 
+import axios from 'axios';
+
 import { MovieSchema } from '../../types/validations';
 import { MovieData } from '../../types';
 
 import { JwtContext } from '../../context/JwtContext';
 
-type GenreFormKey =
-  | 'genre_action'
-  | 'genre_animation'
-  | 'genre_comedy'
-  | 'genre_thriller'
-  | 'genre_horror'
-  | 'genre_romance'
-  | 'genre_scifi'
-  | 'mpaa_rating';
+import { GenreFormKey } from '../../constants/index';
+
+interface Genre {
+  id: number;
+  genre: string;
+  checked: boolean;
+}
 
 interface GenresObject {
   [key: string]: boolean;
 }
 
 const MovieForm = () => {
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  useEffect(() => {
+    axios
+      .get('/genres')
+      .then(({ data }) => {
+        console.log('all genres data: ', data);
+        setGenres(data);
+      })
+      .catch((err) => {
+        alert(`Error in fetching results: ${err}`);
+      });
+  }, []);
+
   const navigate = useNavigate();
 
   const { movieId } = useParams();
@@ -55,27 +69,38 @@ const MovieForm = () => {
   const formSubmitHandler: SubmitHandler<z.infer<typeof MovieSchema>> = async (
     data: MovieData
   ) => {
-    console.log('input movie data: ', data);
+    const checkedGenreIds: number[] = genres
+      .filter((item: Genre) => data[`genre_${item.genre}` as GenreFormKey])
+      .map((item: Genre) => item.id);
+
+    if (checkedGenreIds.length === 0) {
+      alert('select at least 1 genre');
+      return;
+    }
+
+    const updatedGenres: Genre[] = genres.map((item: Genre) => ({
+      ...item,
+      checked: data[`genre_${item.genre}` as GenreFormKey],
+    }));
+
     const movieData = {
       title: data.title,
       releaseDate: data.releaseDate,
       description: data.description,
-      genre_action: data.genre_action,
-      genre_animation: data.genre_animation,
-      genre_comedy: data.genre_comedy,
-      genre_thriller: data.genre_thriller,
-      genre_horror: data.genre_horror,
-      genre_romance: data.genre_romance,
-      genre_scifi: data.genre_scifi,
+      runtime: data.runtime,
       mpaa_rating: data.mpaa_rating,
+      genres: updatedGenres,
+      geners_array: checkedGenreIds,
     };
+
+    console.log('input movie data: ', movieData);
 
     if (movieId) {
       // Update existing movie
       console.log('UPDATE EXISTING Movie');
     } else {
       // New Movie
-      console.log('ADD NEW Movie: ', movieData);
+      console.log('ADD NEW Movie');
     }
   };
 
@@ -108,7 +133,26 @@ const MovieForm = () => {
       {errors.releaseDate && (
         <span className="text-primary-error">{errors.releaseDate.message}</span>
       )}
-
+      {inputHeader('Runtime')}
+      <input
+        type="number"
+        placeholder="movie length in minutes"
+        {...register('runtime')}
+        className="form-input"
+      />
+      {errors.runtime && (
+        <span className="text-primary-error">{errors.runtime.message}</span>
+      )}
+      {inputHeader('Rating')}
+      <input
+        type="text"
+        placeholder="mpaa ratings accepted"
+        {...register('mpaa_rating')}
+        className="form-input"
+      />
+      {errors.mpaa_rating && (
+        <span className="text-primary-error">{errors.mpaa_rating.message}</span>
+      )}
       {inputHeader('Description')}
       <span className="text-gray-500 text-sm">(upto 200 characters)</span>
       <textarea
@@ -121,143 +165,38 @@ const MovieForm = () => {
       )}
       {inputHeader('Genres')}
       <div className="grid gap-1 grid-cols-2 md:grid-cols-3 mt-2">
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_action')} />
-          <span>Action</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_animation')} />
-          <span>Animation</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_comedy')} />
-          <span>Comedy</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_thriller')} />
-          <span>Thriller</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_horror')} />
-          <span>Horror</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_romance')} />
-          <span>Romance</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
-        <label className="flex gap-1 items-center border p-4 cursor-pointer">
-          <input type="checkbox" {...register('genre_scifi')} />
-          <span>Sci-fi</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-            />
-          </svg>
-        </label>
+        {genres?.length > 0 &&
+          genres.map((item: Genre) => (
+            <label
+              className="flex gap-1 items-center border p-4 cursor-pointer"
+              key={item.id}
+            >
+              <input
+                type="checkbox"
+                key={item.id}
+                id={`${item.id}`}
+                {...register(`genre_${item.genre}` as GenreFormKey)}
+              />
+              <span>
+                {item.genre.charAt(0).toUpperCase() + item.genre.slice(1)}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
+                />
+              </svg>
+            </label>
+          ))}
       </div>
-      {inputHeader('Rating')}
-      <input
-        type="number"
-        placeholder="mpaa ratings accepted"
-        {...register('mpaa_rating')}
-        className="form-input"
-      />
-      {errors.mpaa_rating && (
-        <span className="text-primary-error">{errors.mpaa_rating.message}</span>
-      )}
       <button
         className="btn btn-primary w-1/2 mx-auto absolute left-1/2 transform -translate-x-1/2 mt-16"
         disabled={isSubmitting}

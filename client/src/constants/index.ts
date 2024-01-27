@@ -45,33 +45,17 @@ export const loggedOutCategories = [
   },
 ];
 
-export const genres = [
-  {
-    id: 5,
-    label: 'Action',
-  },
-  {
-    id: 10,
-    label: 'Animation',
-  },
-  {
-    id: 1,
-    label: 'Comedy',
-  },
-  {
-    id: 6,
-    label: 'Thriller',
-  },
-  {
-    id: 3,
-    lebel: 'Horror',
-  },
-  {
-    id: 4,
-    label: 'Romance',
-  },
-  {
-    id: 2,
-    label: 'Sci-fi',
-  },
-];
+export type GenreFormKey =
+  | 'genre_Action'
+  | 'genre_Adventure'
+  | 'genre_Animation'
+  | 'genre_Comedy'
+  | 'genre_Drama'
+  | 'genre_Fantasy'
+  | 'genre_Horror'
+  | 'genre_Mystery'
+  | 'genre_Romance'
+  | 'genre_Sci-Fi'
+  | 'genre_Superhero'
+  | 'genre_Thriller'
+  | 'genre_Crime';
